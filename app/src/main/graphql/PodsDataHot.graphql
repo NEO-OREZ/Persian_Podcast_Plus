@@ -1,0 +1,11 @@
+
+query DataQueryHOT($podcastsFirst2: Int, $filters: PodcastFilters, $podcastsSort2: PodcastSort, $page: Int) {
+    podcasts(first: $podcastsFirst2, filters: $filters, sort: $podcastsSort2, page: $page) {
+        data {
+            id
+            title
+            description
+            imageUrl
+        }
+    }
+}

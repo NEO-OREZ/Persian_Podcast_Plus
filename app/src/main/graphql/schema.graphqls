@@ -1,0 +1,2567 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+interface ErrorInterface {
+    message: String!
+}
+
+interface HasFollowers {
+    followers: [Follow]
+}
+
+union ActionResultUnion = ActionResult | EntityNotFoundError | Error | NoAuthenticatedUserError
+
+union AddItemToListResult = Error | IncorrectListTypeError | ListItem | ListNotFoundError | NoAuthenticatedUserError
+
+union BookmarkResult = ActionResult | EntityNotFoundError | Error | ListItemNotFoundError | NoAuthenticatedUserError
+
+union CanBeFollowed = Creator | List | Podcast | User
+
+union CanBeRated = Episode | Podcast
+
+union Creditable = Episode | Podcast
+
+union DeleteListResult = ActionResult | Error | ListNotFoundError | NoAuthenticatedUserError
+
+union EditCreatorResult = Creator | DuplicateCreatorNameError | Error | NoAuthenticatedUserError | UnauthorizedCreatorEditError | ValidationError
+
+union EditListResult = Error | List | ListNotFoundError
+
+union FollowResultUnion = Error | FollowResult | NoAuthenticatedUserError | NoExistingFollowError
+
+union ListNoteEditResult = Error | ListItem | ListItemNotFoundError | ListItemNotInListError | ListNotFoundError | NoAuthenticatedUserError | NoNoteOnListItemError | NoteAlreadyExistsError
+
+union Listable = Episode | ListHeading | Podcast
+
+" @hideFromDocumentation "
+union Moderatable = Feed | FeedApproval | Podcast
+
+union RatingResult = EntityNotFoundError | Error | NoAuthenticatedUserError | Rating
+
+union RemoveItemFromListResult = ActionResult | Error | ListItemNotFoundError | ListNotFoundError | NoAuthenticatedUserError
+
+union ReorderListResult = Error | List | ListItemNotFoundError | ListItemNotInListError | ListNotFoundError | NoAuthenticatedUserError
+
+union ReviewReplier = Creator | Podcast
+
+union ReviewResult = EntityNotFoundError | Error | NoAuthenticatedUserError | Review
+
+union Reviewable = Episode | Podcast
+
+union SubmitCreditResult = CreatorNotFoundError | CreditSubmission | CreditSubmissionAlreadySubmittedError | Error | InvalidEpisodeSelectionError | InvalidRoleCodeError | NoAuthenticatedUserError | PodcastNotFoundError | RecurringCreditSubmission | RedundantCreditSubmissionError
+
+type AccessToken {
+    access_token: String!
+    expires_in: Int!
+    token_type: String!
+}
+
+type ActionResult {
+    successful: Boolean!
+}
+
+"The episode object and all of its attributes."
+type Brand {
+    " The code to use when searching "
+    code: String!
+    """
+
+    EXPERIMENTAL BETA - the estimated dollar amount this brand spent on sponsorships between certain dates
+
+    Only available with certain permissions.
+    """
+    estimatedAdSpend(from: DateTime, to: DateTime): EstimatedAdSpend
+    " Podchaser's internal brand ID."
+    id: ID!
+    " The name of the brand. "
+    name: String!
+    """
+
+    Only available with certain permissions.
+    """
+    sponsoredPodcasts(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: PodcastSort
+    ): PodcastSponsorList
+}
+
+"A paginated list of Brand items."
+type BrandList {
+    cursorInfo: CursorInfo
+    "A list of Brand items."
+    data: [Brand!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+" A Podchaser category. "
+type Category {
+    slug: String
+    title: String
+}
+
+" The name of the character a creator played within an episode. "
+type Character {
+    name: String!
+}
+
+" A Chart Category. "
+type ChartCategory {
+    slug: String
+    title: String
+}
+
+" An individual chart position for a single platform, single category, and a single podcast. "
+type ChartPosition {
+    category: String
+    change: Int
+    changeStatus: ChartChangeStatus
+    " The country the charts are for. Each country has their own charts and rankings. "
+    country: String
+    day: Date!
+    " The platform for the charts, such as Apple charts or Spotify charts. "
+    platform: ChartPlatform!
+    podcast: Podcast
+    podcastIdentifier: String
+    position: Int!
+}
+
+"A paginated list of ChartPosition items."
+type ChartPositionPaginator {
+    "A list of ChartPosition items."
+    data: [ChartPosition!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+}
+
+" A contact. Usually attached to a podcast. Requires Plus or Pro API access. "
+type Contact {
+    email: String
+    fullName: String
+    modifiedDate: DateTime
+    relation: ContactRelation
+    url: Url
+}
+
+" How the contact is affiliated with the entity it is attached to. Requires Plus or Pro API access. "
+type ContactRelation {
+    createdAt: DateTime!
+    role: String
+}
+
+" The creator object and all of its attributes. "
+type Creator {
+    " Creator's bio as added by creator. "
+    bio: String
+    " Birthday of the creator, if provided by creator. "
+    birthday: Date
+    " All of the credits for the creator. "
+    credits(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreditFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): PodcastCreditList
+    " The number of episodes the creator has appeared on. "
+    episodeAppearanceCount: Int
+    " The number of users who follow the creator. "
+    followerCount: Int
+    " The creator's image within Podchaser. "
+    imageUrl: Url
+    " A shorter, informal version of the creator's name "
+    informalName: String
+    " Location of the creator, if provided by creator. "
+    location: String
+    " When the creator entity was last updated within Podchaser. "
+    modifiedDate: DateTime
+    " The full name of the creator "
+    name: String!
+    " The public Podchaser ID of the creator "
+    pcid: String!
+    " The pronouns used to refer to the creator "
+    pronouns: Pronoun!
+    " The social media handles for the creator. "
+    socialLinks: CreatorSocialLinks
+    " Auto-generated subtitle based on the top 3 credits for the creator. "
+    subtitle: String
+    " Auto-generated subtitle based on the top credit for the creator. "
+    subtitleShort: String
+    " The URL for the creator's page on Podchaser "
+    url: Url
+}
+
+"A paginated list of Creator items."
+type CreatorList {
+    cursorInfo: CursorInfo
+    "A list of Creator items."
+    data: [Creator!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type CreatorNotFoundError implements ErrorInterface {
+    message: String!
+}
+
+" The social media handles for a creator. "
+type CreatorSocialLinks {
+    twitter: Url
+    wikipedia: Url
+}
+
+type CreditSubmission {
+    characterName: String
+    creator: Creator!
+    episodes(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): EpisodeList
+    id: ID
+    operationType: CreditSubmissionOperation
+    podcast: Podcast!
+    role: Role!
+    state: CreditSubmissionState
+}
+
+type CreditSubmissionAlreadySubmittedError implements ErrorInterface {
+    message: String!
+}
+
+"Information about the current cursor pagination"
+type CursorInfo {
+    cursorRefreshed: Boolean
+    nextCursor: String
+    total: Int!
+}
+
+" A range of demographical data. "
+type DemographicRange {
+    count: Float
+    from: String
+    to: String
+}
+
+" A segment of demographical data. "
+type DemographicSegment {
+    percentage: Float
+    title: String
+}
+
+type DuplicateCreatorNameError implements ErrorInterface {
+    existingCreator: Creator!
+    message: String!
+}
+
+" An email-based contact. "
+type EmailContact {
+    email: String
+    name: String
+}
+
+type EntityNotFoundError implements ErrorInterface {
+    entityId: Int
+    entityType: String
+    message: String!
+}
+
+"The episode object and all of its attributes."
+type Episode {
+    " The publish date of the episode as specified by the publisher "
+    airDate: DateTime!
+    """
+
+    The number of listeners of this episode. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    audienceReach: IntegerRange
+    " The URL of the episode audio "
+    audioUrl: Url
+    """
+
+    Only available with certain permissions.
+    """
+    credits(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreditFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): EpisodeCreditList
+    " A string only representation of the episode description "
+    description: String
+    " The type of episode. These can be either full, bonus or trailer episodes "
+    episodeType: String!
+    """
+
+    EXPERIMENTAL BETA - the estimated number of listeners of this episode
+
+    Only available with certain permissions.
+    """
+    estimatedReach: Int @deprecated(reason: "use 'audienceReach'")
+    " Whether or not this episode has been marked as explicit by the publisher "
+    explicit: Boolean!
+    " The file size of the audio file as specified by the publisher "
+    fileSize: Int
+    " The unique identifier of this episode within the context of the podcast "
+    guid: String
+    " A processed version of the podcast description including sanitized HTML "
+    htmlDescription: String
+    " Podchaser's internal episode ID."
+    id: ID!
+    " The episode specific artwork "
+    imageUrl: Url
+    " The length of the audio in seconds "
+    length: Int
+    " The lists created by Podchaser users that include this episode. "
+    lists(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListSort
+    ): ListList
+    " When the episode entity was last updated within Podchaser. "
+    modifiedDate: DateTime
+    podcast: Podcast!
+    " The raw un-weighted average of all ratings for this episode "
+    ratingAverage: Float
+    ratingCount: Int
+    """
+
+    A summary of how many ratings per star rating for this episode
+
+    Only available with certain permissions.
+    """
+    ratingSummary: [RatingSummary]
+    """
+
+    Only available with certain permissions.
+    """
+    ratings(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: RatingFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: RatingSort
+    ): RatingList
+    reviewCount: Int
+    """
+
+    Only available with certain permissions.
+    """
+    reviews(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ReviewFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ReviewSort
+    ): ReviewList
+    """
+
+    A list of brands which sponsor this episode, and related meta-data
+
+    Only available with certain permissions.
+    """
+    sponsors(
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which items are returned."
+        page: Int
+    ): EpisodeSponsorPaginator
+    " The title of the episode as specified in the RSS feed or podcast platform. "
+    title: String!
+    """
+
+    BETA - The Episode's transcripts, if we have any
+
+    Only available with certain permissions.
+    """
+    transcripts: [Transcript]
+    " The URL of the episode on Podchaser "
+    url: Url
+    """
+
+    The existing rating for the authenticated user
+
+    Only available with certain permissions.
+    """
+    userRating: Rating
+    """
+
+    The existing review for the authenticated user
+
+    Only available with certain permissions.
+    """
+    userReview: Review
+}
+
+" An individual credit representing a single creator (someone who was on or worked with the episode) attached to a single episode. "
+type EpisodeCredit {
+    " If the creator was a voice actor, what character they played within the episode. "
+    characters: [Character]
+    " The creator and all their data. "
+    creator: Creator!
+    " The episode and all its data. "
+    episode: Episode
+    id: ID
+    " The date the episode credit was last updated or was added. "
+    modifiedDate: DateTime
+    podcastCredit: PodcastCredit!
+    " What role they had within the episode, such as host, guest, producer, and many others. "
+    role: Role!
+}
+
+"A paginated list of EpisodeCredit items."
+type EpisodeCreditList {
+    cursorInfo: CursorInfo
+    "A list of EpisodeCredit items."
+    data: [EpisodeCredit!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+"A paginated list of Episode items."
+type EpisodeList {
+    cursorInfo: CursorInfo
+    "A list of Episode items."
+    data: [Episode!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type EpisodeSponsor {
+    brand: Brand
+    episode: Episode
+    id: ID!
+}
+
+"A paginated list of EpisodeSponsor items."
+type EpisodeSponsorPaginator {
+    "A list of EpisodeSponsor items."
+    data: [EpisodeSponsor!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+}
+
+type Error implements ErrorInterface {
+    message: String!
+}
+
+type EstimatedAdSpend {
+    high: Float
+    low: Float
+}
+
+type Feed {
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    addedFrom: String
+    episodes: [Episode!]
+    id: ID!
+    isPrimary: Boolean
+    podcast: Podcast
+    """
+
+    @hideFromDocumentation The podcast specific data pulled directly from the feed
+
+    Only available with certain permissions.
+    """
+    podcastData: PodcastFeedData
+    resourceIdentifier: String!
+    source: String!
+}
+
+type FeedApproval {
+    createdAt: DateTime
+    id: ID!
+    url: String!
+    user: User
+}
+
+type Follow {
+    entity: CanBeFollowed
+    followedAt: DateTime
+    user: User
+}
+
+"A paginated list of Follow items."
+type FollowPaginator {
+    "A list of Follow items."
+    data: [Follow!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+}
+
+type FollowResult {
+    status: FollowResultStatus!
+    subscribed: Boolean!
+}
+
+type IncorrectListTypeError implements ErrorInterface {
+    message: String!
+}
+
+" A range of integers "
+type IntegerRange {
+    from: Int
+    to: Int
+}
+
+type InvalidEpisodeSelectionError implements ErrorInterface {
+    message: String!
+}
+
+type InvalidRoleCodeError implements ErrorInterface {
+    message: String!
+}
+
+" A user list which can contain podcasts, episodes, headers, and notes. "
+type List {
+    createdAt: DateTime
+    " The description added by the user. "
+    description: String
+    " The number of users who follow the list. "
+    followerCount: Int!
+    id: ID!
+    " The contents of the list. "
+    items(
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int
+    ): ListItemPaginator
+    " The number of likes the list has received from users. "
+    likeCount: Int!
+    " The user(s) who can edit the list. "
+    owners(
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int
+    ): UserPaginator
+    " What privacy setting the user selected for the list. "
+    privacy: ListPrivacy!
+    " The name of the list. "
+    title: String!
+    updatedAt: DateTime
+    " The URL for the list on Podchaser "
+    url: Url
+}
+
+type ListHeading {
+    heading: String
+}
+
+" An individual item within a list. "
+type ListItem {
+    id: ID!
+    " The specific podcast, episode, or header. "
+    item: Listable
+    " Any note the user attached to this item. "
+    note: ListNote
+    " Where in the list this item is located. "
+    position: Int!
+}
+
+type ListItemNotFoundError implements ErrorInterface {
+    message: String!
+}
+
+type ListItemNotInListError implements ErrorInterface {
+    message: String!
+}
+
+"A paginated list of ListItem items."
+type ListItemPaginator {
+    "A list of ListItem items."
+    data: [ListItem!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+}
+
+"A paginated list of List items."
+type ListList {
+    cursorInfo: CursorInfo
+    "A list of List items."
+    data: [List!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type ListNotFoundError implements ErrorInterface {
+    message: String!
+}
+
+" A note the user attached to an item on a list. "
+type ListNote {
+    noteText: String!
+    user: User
+}
+
+type Listen {
+    episode: Episode!
+    listenDate: DateTime
+    user: User!
+}
+
+"A paginated list of Listen items."
+type ListenList {
+    cursorInfo: CursorInfo
+    "A list of Listen items."
+    data: [Listen!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type Mention {
+    endTime: String
+    snippet: String
+    startTime: String
+}
+
+" @hideFromDocumentation "
+type ModerationReasonStats {
+    reason: ModerationReason!
+    taskCount: Int!
+}
+
+" @hideFromDocumentation "
+type ModerationStats {
+    reasonStats: [ModerationReasonStats]!
+    taskCount: Int!
+}
+
+" @hideFromDocumentation "
+type ModerationTask {
+    id: ID!
+    reason: ModerationReason!
+    relatedModels: [Moderatable]!
+    resolvedAt: DateTime
+    resolvedBy: User
+    toModerate: Moderatable
+}
+
+"@hideFromDocumentation A paginated list of ModerationTask items."
+type ModerationTaskList {
+    cursorInfo: CursorInfo
+    "A list of ModerationTask items."
+    data: [ModerationTask!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type Mutation {
+    """
+
+    Only available with certain permissions.
+    """
+    addBookmark(entityId: ID!, entityType: BookmarkableType!): BookmarkResult
+    """
+
+    Add a new creator into the Podchaser database
+
+    Only available with certain permissions.
+    """
+    addCreator(data: CreatorInput!, forceCreate: Boolean = false): EditCreatorResult
+    """
+
+    Add credits for a creator to a selection of episodes
+
+    Only available with certain permissions.
+    """
+    addCreditToEpisodes(characterName: String, creator: CreatorIdentifier!, episodeSelection: EpisodeSelection!, podcast: PodcastIdentifier!, roleCode: String!): SubmitCreditResult
+    """
+
+    Add a heading to a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    addHeadingToList(headingText: String!, identifier: ListIdentifier!, position: Int): AddItemToListResult
+    """
+
+    Add an item to a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    addItemToList(entityId: ID!, entityType: ListType!, identifier: ListIdentifier!, position: Int): AddItemToListResult
+    """
+
+    Add a note to a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    addNoteToListItem(identifier: ListIdentifier!, listItemId: ID!, noteText: String!): ListNoteEditResult
+    """
+
+    Add a rating on behalf of a user. Requires 'edit_ratings' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    addRating(entity: EntityToRate!, rating: Int!): RatingResult!
+    """
+
+    Add a recurring credit - this creator and role will be added to all new episodes of the podcast
+
+    Only available with certain permissions.
+    """
+    addRecurringCredit(characterName: String, creator: CreatorIdentifier!, podcast: PodcastIdentifier!, roleCode: String!): SubmitCreditResult
+    """
+
+    Add a review on behalf of a user. Requires 'edit_reviews' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    addReview(content: String, entity: EntityToReview!): ReviewResult!
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    approveFeed(id: ID!): ModerationTask!
+    """
+
+    Create a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    createList(data: CreateListInput!): EditListResult
+    """
+
+    Delete a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    deleteList(identifier: ListIdentifier!): DeleteListResult
+    """
+
+    Delete a rating on behalf of a user. Requires 'edit_ratings' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    deleteRating(entity: EntityToRate!): ActionResultUnion
+    """
+
+    Delete a review on behalf of a user. Requires 'edit_reviews' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    deleteReview(entity: EntityToReview!): ActionResultUnion
+    """
+
+    Make changes to an existing Creator. If the associated user did not submit or has not claimed the creator, this will throw an error
+
+    Only available with certain permissions.
+    """
+    editCreator(data: CreatorInput!, identifier: CreatorIdentifier!): EditCreatorResult
+    """
+
+    Follw an entity (podcast, creator, etc..) on behalf of a user. Requires 'edit_follows' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    followEntity(entityId: Int!, entityType: Followable!, subscribe: Boolean = false): FollowResultUnion!
+    """
+
+    Mark an episode as listened to by the user.
+
+    Only available with certain permissions.
+    """
+    markEpisodeListened(episodeId: ID!): ActionResultUnion
+    """
+
+    Mark an episode as not listened to by the user.
+
+    Only available with certain permissions.
+    """
+    markEpisodeNotListened(episodeId: ID!): ActionResultUnion
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    markFeedAsDuplicate(id: ID!, makePrimary: Boolean!, podcastId: ID!): ModerationTask!
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    rejectFeed(id: ID!, reason: String!): ModerationTask!
+    """
+
+    Only available with certain permissions.
+    """
+    removeBookmark(entityId: ID!, entityType: BookmarkableType!): BookmarkResult
+    """
+
+    Remove a character from a selection of episodes that have a voice actor or similar role
+
+    Only available with certain permissions.
+    """
+    removeCharacterFromEpisodes(characterName: String, creator: CreatorIdentifier!, episodeSelection: EpisodeSelection!, podcast: PodcastIdentifier!, roleCode: String!): SubmitCreditResult
+    """
+
+    Remove credits for a creator from a selection of episodes
+
+    Only available with certain permissions.
+    """
+    removeCreditFromEpisodes(creator: CreatorIdentifier!, episodeSelection: EpisodeSelection!, podcast: PodcastIdentifier!, roleCode: String!): SubmitCreditResult
+    """
+
+    Remove a heading from a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    removeHeadingFromList(identifier: ListIdentifier!, listItemId: ID!): RemoveItemFromListResult
+    """
+
+    Remove an item from a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    removeItemFromList(entityId: ID!, entityType: ListType!, identifier: ListIdentifier!): RemoveItemFromListResult
+    """
+
+    Remove a note from a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    removeNoteFromListItem(identifier: ListIdentifier!, listItemId: ID!): ListNoteEditResult
+    """
+
+    Remove a recurring credit - this will not remove credits from any existing episodes, but new episodes will no longer have this creator and role added
+
+    Only available with certain permissions.
+    """
+    removeRecurringCredit(characterName: String, creator: CreatorIdentifier!, podcast: PodcastIdentifier!, roleCode: String!): SubmitCreditResult
+    """
+
+    Reorder a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    reorderList(identifier: ListIdentifier!, newItemOrder: [ListItemPosition]): ReorderListResult
+    requestAccessToken(input: AccessTokenRequest!): AccessToken
+    """
+
+    Submit a podcast to the Podchaser database.
+
+    Only available with certain permissions.
+    """
+    submitPodcast(
+        """
+
+        A valid feed identifier. Currently supported are
+
+        - RSS Feed URL
+        - Apple Podcasts ID
+        - Spotify ID
+        """
+        identifier: String!
+    ): SubmitPodcastResponse
+    """
+
+    Unfollw an entity (podcast, creator, etc..) on behalf of a user. Requires 'edit_follows' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    unfollowEntity(entityId: Int!, entityType: Followable!): FollowResultUnion
+    """
+
+    Only available with certain permissions.
+    """
+    unsubscribeFromEntity(entityId: Int!, entityType: Followable!): FollowResultUnion
+    """
+
+    Update a list on behalf of a user. Requires 'edit_lists' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    updateList(data: UpdateListInput, identifier: ListIdentifier!): EditListResult
+    """
+
+    Updating a rating on behalf of a user. Requires 'edit_ratings' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    updateRating(entity: EntityToRate!, rating: Int!): RatingResult!
+    """
+
+    Update a review on behalf of a user. Requires 'edit_reviews' scope permission via Oauth.
+
+    Only available with certain permissions.
+    """
+    updateReview(content: String, entity: EntityToReview!): ReviewResult!
+}
+
+type NoAuthenticatedUserError implements ErrorInterface {
+    message: String!
+}
+
+type NoExistingFollowError implements ErrorInterface {
+    message: String!
+}
+
+type NoNoteOnListItemError implements ErrorInterface {
+    message: String!
+}
+
+type NoteAlreadyExistsError implements ErrorInterface {
+    message: String!
+}
+
+"Information about pagination using a Relay style cursor connection."
+type PageInfo {
+    "Number of nodes in the current page."
+    count: Int!
+    "Index of the current page."
+    currentPage: Int!
+    "The cursor to continue paginating forwards."
+    endCursor: String
+    "When paginating forwards, are there more items?"
+    hasNextPage: Boolean!
+    "When paginating backwards, are there more items?"
+    hasPreviousPage: Boolean!
+    "Index of the last available page."
+    lastPage: Int!
+    "The cursor to continue paginating backwards."
+    startCursor: String
+    "Total number of nodes in the paginated connection."
+    total: Int!
+}
+
+"Information about pagination using a fully featured paginator."
+type PaginatorInfo {
+    "Number of items in the current page."
+    count: Int!
+    "Index of the current page."
+    currentPage: Int!
+    "Index of the first item in the current page."
+    firstItem: Int
+    "Are there more pages after this one?"
+    hasMorePages: Boolean!
+    "Index of the last item in the current page."
+    lastItem: Int
+    "Index of the last available page."
+    lastPage: Int!
+    "Number of items per page."
+    perPage: Int!
+    "Number of total available items."
+    total: Int!
+}
+
+"The podcast object and all of its attributes."
+type Podcast {
+    " The Apple Podcast ID (formerly iTunes ID). This field is either added when the podcast is submitted to Podchaser or Podchaser retrieves this ID after the podcast is approved by moderation team. "
+    applePodcastsId: String
+    """
+
+    The estimated monthly listens the podcast receives. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    audienceEstimate: Float
+    " The author of the podcast as defined in the RSS feed. "
+    author: EmailContact
+    " The average length, in seconds, for this podcast's episodes. "
+    avgEpisodeLength: Int
+    " All of the Podchaser categories of the podcast. "
+    categories: [Category]
+    """
+
+    The chart rankings of the podcast on Apple Podcasts and Spotify. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    charts(
+        category: String,
+        country: String,
+        day: Date!,
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        platform: ChartPlatform!,
+        sort: [PodcastChartsSortOrderByClause!]
+    ): ChartPositionPaginator
+    """
+
+    A list of contact information for people related to the podcast. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    contacts: [Contact]
+    """
+
+    Only available with certain permissions.
+    """
+    credits(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreditFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): PodcastCreditList
+    " The average number of days between episodes. "
+    daysBetweenEpisodes: Int
+    """
+
+    An aggregation of the demographics of the podcast's audience. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    demographics: PodcastDemographics
+    " A string only representation of the podcast description. "
+    description: String
+    """
+
+    The estimated number of listeners of an episode for this podcast. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    episodeAudienceEstimate: IntegerRange
+    " All the podcast's episodes. "
+    episodes(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: EpisodeFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: EpisodeSort
+    ): EpisodeList
+    " The known feeds for this podcast - this may include feeds from other services and previous inactive RSS feed URLs"
+    feeds: [Feed!]
+    """
+
+    Whether or not this podcast is likely to have guests.
+
+    Only available with certain permissions.
+    """
+    hasGuests: Boolean!
+    " A processed version of the podcast description including sanitized HTML. "
+    htmlDescription: String
+    " Podchaser's internal podcast ID."
+    id: ID!
+    " The podcast artwork URL as specified in the RSS feed or podcast platform. "
+    imageUrl: Url
+    " The author of the podcast as defined in the RSS feed. "
+    itunesAuthor: EmailContact @deprecated(reason: "use 'author'")
+    itunesID: String @deprecated(reason: "use 'applePodcastsId'")
+    " The spoken language of the podcast in standard IETF format. "
+    language: String
+    " When the podcast's latest episode aired. "
+    latestEpisodeDate: DateTime
+    lists(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListSort
+    ): ListList
+    " When the podcast entity was last updated within Podchaser. "
+    modifiedDate: DateTime
+    " The total number of episodes this podcast has. "
+    numberOfEpisodes: Int
+    """
+
+    The podcast's PowerScore, which is Podchaser's unique attribute that represents how popular and influential a podcast is. Calculated using a proprietary algorithm which uses dozens of different factors, such as reach and subcribers. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    powerScore: Float
+    " The raw un-weighted average of all ratings for this podcast "
+    ratingAverage: Float
+    ratingCount: Int
+    """
+
+    A summary of how many ratings per star rating for this podcast
+
+    Only available with certain permissions.
+    """
+    ratingSummary: [RatingSummary]
+    """
+
+    Ratings for this podcast by all users
+
+    Only available with certain permissions.
+    """
+    ratings(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: RatingFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: RatingSort
+    ): RatingList
+    reviewCount: Int
+    """
+
+    Reviews for this podcast by all users
+
+    Only available with certain permissions.
+    """
+    reviews(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ReviewFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ReviewSort
+    ): ReviewList
+    " The URL of the primary RSS feed for the podcast. This may be null if the podcast source is Spotify or another service. "
+    rssUrl: String
+    " A processed version of the podcast description including sanitized HTML. "
+    sanitizedDescription: String @deprecated(reason: "use 'htmlDescription'")
+    """
+
+    A list of podcasts that are similar to the podcast. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    similarPodcasts(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): PodcastList
+    " The social media handles for the podcast. "
+    socialLinks: PodcastSocialLinks
+    """
+
+    A list of brands which have sponsored episodes of this podcast
+
+    Only available with certain permissions.
+    """
+    sponsors(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): PodcastSponsorList
+    " When the podcast's first episode aired. "
+    startDate: DateTime
+    " The title of the podcast as specified in the RSS feed or podcast platform. "
+    title: String!
+    " The URL for the podcast on Podchaser. "
+    url: Url
+    """
+
+    The existing rating for the authenticated user
+
+    Only available with certain permissions.
+    """
+    userRating: Rating
+    """
+
+    The existing review for the authenticated user
+
+    Only available with certain permissions.
+    """
+    userReview: Review
+    " The homepage for the podcast as specified in the RSS feed. "
+    webUrl: Url
+}
+
+" A podcast-level credit representing a unique role of a unique creator who is attached to one or more episodes of a podcast. "
+type PodcastCredit {
+    " The creator and all their data. "
+    creator: Creator!
+    " The number of episodes this creator was in this role for the podcast. "
+    episodeCount: Int!
+    " The individual episode-level credits for each episode this creator was in this role for. "
+    episodeCredits(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreditFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): EpisodeCreditList
+    id: ID
+    " The date the podcast credit was last updated or was added. "
+    modifiedDate: DateTime
+    " The podcast and all its data. "
+    podcast: Podcast!
+    " What role they had within the episode, such as host, guest, producer, and many others. "
+    role: Role!
+}
+
+"A paginated list of PodcastCredit items."
+type PodcastCreditList {
+    cursorInfo: CursorInfo
+    "A list of PodcastCredit items."
+    data: [PodcastCredit!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+" An aggregation of the demographics of a podcast's audience. Not all podcasts will have values for all fields. "
+type PodcastDemographics {
+    ageRanges: [DemographicRange]
+    brands: [DemographicSegment]
+    cities: [DemographicSegment]
+    countries: [DemographicSegment]
+    employers: [DemographicSegment]
+    ethnicities: [DemographicSegment]
+    genderBias: DemographicSegment
+    incomeRanges: [DemographicRange]
+    influencers: [DemographicSegment]
+    interests: [DemographicSegment]
+    medianAge: Float
+    medianIncome: Float
+    occupations: [DemographicSegment]
+}
+
+" @hideFromDocumentation "
+type PodcastFeedData {
+    artworkUrl: Url
+    description: String
+    episodes: [PodcastFeedEpisode]
+    error: String
+    isExplicit: Boolean
+    languageCode: String
+    title: String
+    website: Url
+}
+
+" @hideFromDocumentation "
+type PodcastFeedEpisode {
+    airDate: Date!
+    audioUrl: Url
+    title: String
+}
+
+"A paginated list of Podcast items."
+type PodcastList {
+    cursorInfo: CursorInfo
+    "A list of Podcast items."
+    data: [Podcast!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type PodcastNotFoundError implements ErrorInterface {
+    message: String!
+}
+
+" The social media handles for a podcast. "
+type PodcastSocialLinks {
+    facebook: Url
+    instagram: Url
+    twitter: Url
+}
+
+type PodcastSponsor {
+    brand: Brand!
+    episode_count: Int!
+    podcast: Podcast!
+}
+
+"A paginated list of PodcastSponsor items."
+type PodcastSponsorList {
+    cursorInfo: CursorInfo
+    "A list of PodcastSponsor items."
+    data: [PodcastSponsor!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+" The authenticated user object and all of its attributes. For use in apps using oauth to log in as users."
+type ProfileUser {
+    """
+
+    Only available with certain permissions.
+    """
+    bookmarks(type: BookmarkableType): List
+    """
+
+    Only available with certain permissions.
+    """
+    displayName: String
+    """
+
+    Only available with certain permissions.
+    """
+    email: String!
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    following(
+        entityType: Followable,
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which items are returned."
+        page: Int
+    ): FollowPaginator
+    """
+
+    Only available with certain permissions.
+    """
+    id: ID!
+    """
+
+    Only available with certain permissions.
+    """
+    informalName: String
+    """
+
+    Only available with certain permissions.
+    """
+    listens(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListenFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListenSort
+    ): ListenList
+    lists(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListSort
+    ): ListList
+    profileImageUrl: Url
+    """
+
+    Only available with certain permissions.
+    """
+    ratings(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: RatingFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): RatingList
+    """
+
+    Only available with certain permissions.
+    """
+    reviews(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ReviewFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): ReviewList
+    top8: List
+    username: String!
+}
+
+type Query {
+    apiVersion: String!
+    """
+
+    Retrieve a specific brand.
+
+    Only available with certain permissions.
+    """
+    brand(code: String!): Brand
+    """
+
+    Search, filter, and sort known brands.
+
+    Only available with certain permissions.
+    """
+    brands(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: BrandSort
+    ): BrandList
+    """
+
+    Pull a list of chart categories for a specific platform.
+
+    Only available with certain permissions.
+    """
+    chartCategories(platform: ChartPlatform!): [ChartCategory!]!
+    """
+
+    Retrieve chart data for Apple Podcasts charts or Spotify charts by country, day, and category. Requires [our plus or pro plans](https://features.podchaser.com/api).
+
+    Only available with certain permissions.
+    """
+    charts(
+        " Which category charts to pull. "
+        category: String,
+        " The country the charts are for. Expected in 2-character country code, such as us or ca. "
+        country: String,
+        " The date of the charts to pull. "
+        day: Date!,
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        " The platform to pull charts for. "
+        platform: ChartPlatform!,
+        sort: [QueryChartsSortOrderByClause!]
+    ): ChartPositionPaginator
+    """
+
+    Retrieve data about a specific user.
+
+    Only available with certain permissions.
+    """
+    creator(identifier: CreatorIdentifier!): Creator
+    """
+
+    Search, filter, and sort all creators.
+
+    Only available with certain permissions.
+    """
+    creators(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreatorFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: CreatorSort
+    ): CreatorList
+    """
+
+    Search, filter, and sort all podcast credits.
+
+    Only available with certain permissions.
+    """
+    credits(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: CreditFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): PodcastCreditList
+    """
+
+    Search for a specific episode.
+
+    Only available with certain permissions.
+    """
+    episode(identifier: EpisodeIdentifier!): Episode
+    """
+
+    Search, filter, and sort all podcast episodes.
+
+    Only available with certain permissions.
+    """
+    episodes(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: EpisodeFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: EpisodeSort
+    ): EpisodeList
+    """
+
+    @hideFromDocumentation
+
+    Only available with certain permissions.
+    """
+    feed(id: ID!): Feed
+    """
+
+    Retrieve a specific list.
+
+    Only available with certain permissions.
+    """
+    list(identifier: ListIdentifier!): List
+    """
+
+    Search, filter, and sort all lists created by Podchaser users.
+
+    Only available with certain permissions.
+    """
+    lists(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListSort
+    ): ListList
+    " @hideFromDocumentation "
+    moderationTasks(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ModerationTaskFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): ModerationTaskList
+    """
+
+    Search for a specific podcast by Apple Podcast ID, Podchaser ID, RSS feed URL, and more.
+
+    Only available with certain permissions.
+    """
+    podcast(identifier: PodcastIdentifier!): Podcast
+    """
+
+    Search for a specific podcast credit.
+
+    Only available with certain permissions.
+    """
+    podcastCredit(identifier: PodcastCreditIdentifier!): PodcastCredit
+    """
+
+    Search, filter, and sort all podcasts.
+
+    Only available with certain permissions.
+    """
+    podcasts(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Filters that can be applied to a podcasts query."
+        filters: PodcastFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: PodcastSort
+    ): PodcastList
+    """
+
+    Retrieve data about the authenticated user. For use in apps using oauth to log in as users.
+
+    Only available with certain permissions.
+    """
+    profile: ProfileUser
+    """
+
+    Search, filter, and sort all podcast and episode ratings.
+
+    Only available with certain permissions.
+    """
+    ratings(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: RatingFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: RatingSort
+    ): RatingList
+    """
+
+    Search, filter, and sort all podcast and episode reviews.
+
+    Only available with certain permissions.
+    """
+    reviews(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ReviewFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): ReviewList
+    """
+
+    Search episode transcripts for a keyword that was mentioned. Disclaimer: content may have changed from when it was originally observed.
+
+    Only available with certain permissions.
+    """
+    transcriptSearch(first: Int, page: Int, term: String!): TranscriptSearchResults!
+    """
+
+    Retrieve data about a specific user.
+
+    Only available with certain permissions.
+    """
+    user(username: String!): User
+    """
+
+    Search, filter and sort the podcast database
+
+    Only available with certain permissions.
+    """
+    users(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: Sort
+    ): UserList
+}
+
+type Rating {
+    id: ID!
+    modifiedDate: DateTime
+    ratedAt: DateTime!
+    ratedEntity: CanBeRated!
+    rating: Int!
+    user: User!
+}
+
+"A paginated list of Rating items."
+type RatingList {
+    cursorInfo: CursorInfo
+    "A list of Rating items."
+    data: [Rating!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type RatingSummary {
+    count: Int
+    value: Int
+}
+
+type RecurringCreditSubmission {
+    characterName: String
+    creator: Creator!
+    id: ID
+    isRecurring: Boolean!
+    podcast: Podcast!
+    role: Role!
+    state: CreditSubmissionState
+}
+
+type RedundantCreditSubmissionError implements ErrorInterface {
+    message: String!
+}
+
+type Review {
+    content: String!
+    id: ID!
+    modifiedDate: DateTime
+    rating: Rating
+    reply: ReviewReply
+    reviewable: Reviewable! @deprecated(reason: "use 'reviewedEntity'")
+    reviewedAt: DateTime!
+    " The entity the review was left on, such as a podcast or an episode. "
+    reviewedEntity: Reviewable!
+    " The URL for the review on Podchaser "
+    url: Url
+    user: User!
+}
+
+"A paginated list of Review items."
+type ReviewList {
+    cursorInfo: CursorInfo
+    "A list of Review items."
+    data: [Review!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+type ReviewReply {
+    content: String!
+    repliedAt: DateTime!
+    replier: ReviewReplier!
+    review: Review!
+}
+
+" The role the creator had for a credit. "
+type Role {
+    code: String!
+    description: String!
+    title: String!
+}
+
+"Information about pagination using a simple paginator."
+type SimplePaginatorInfo {
+    "Number of items in the current page."
+    count: Int!
+    "Index of the current page."
+    currentPage: Int!
+    "Index of the first item in the current page."
+    firstItem: Int
+    "Index of the last item in the current page."
+    lastItem: Int
+    "Number of items per page."
+    perPage: Int!
+}
+
+type SubmitPodcastResponse {
+    " The podcast that was submitted - this may not contain all episodes or meta data until a full parse process has completed. "
+    podcast: Podcast
+    " The current status of the podcast submitted "
+    status: String
+    " Returns true if the feed submitted resulted in a new podcast being created "
+    submitted: Boolean
+}
+
+"The transcript object and all of its attributes."
+type Transcript {
+    " The date of the last time this transcript was generated "
+    generatedDate: DateTime
+    " The transcript file "
+    url: Url!
+}
+
+type TranscriptPaginatorInfo {
+    count: Int!
+    currentPage: Int!
+    firstItem: Int
+    hasMorePages: Boolean!
+    lastItem: Int
+    lastPage: Int
+    perPage: Int!
+    total: Int!
+}
+
+type TranscriptSearchData {
+    episode: Episode
+    mentionCount: Int
+    mentions: [Mention]
+}
+
+type TranscriptSearchResults {
+    data: [TranscriptSearchData]
+    paginatorInfo: TranscriptPaginatorInfo
+}
+
+type UnauthorizedCreatorEditError implements ErrorInterface {
+    message: String!
+}
+
+"The user object and all of its attributes."
+type User {
+    " The name the user has chosen to be displayed on Podchaser. "
+    displayName: String
+    following(
+        entityType: Followable,
+        "Limits number of fetched items. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which items are returned."
+        page: Int
+    ): FollowPaginator
+    id: ID!
+    " The name the user has entered for a more informal conversation. Usually their first name. "
+    informalName: String
+    lists(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ListFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ListSort
+    ): ListList
+    """
+
+    Only available with certain permissions.
+    """
+    profileImageUrl: Url
+    ratings(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: RatingFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: RatingSort
+    ): RatingList
+    reviews(
+        "The cursor from which to retrieve the next page of results"
+        cursor: String,
+        filters: ReviewFilters,
+        "Limits number of fetched elements. Maximum allowed value: 100."
+        first: Int = 10,
+        "The offset from which elements are returned."
+        page: Int,
+        "Which type of pagination to use"
+        paginationType: PaginationType,
+        "A search term to filter on."
+        searchTerm: String,
+        "How to sort the results"
+        sort: ReviewSort
+    ): ReviewList
+    top8: List
+    " The URL for the user's profile on Podchaser "
+    url: Url
+    username: String!
+}
+
+"A paginated list of User items."
+type UserList {
+    cursorInfo: CursorInfo
+    "A list of User items."
+    data: [User!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo
+}
+
+"A paginated list of User items."
+type UserPaginator {
+    "A list of User items."
+    data: [User!]!
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+}
+
+type ValidationError implements ErrorInterface {
+    message: String!
+    validationErrors: [ValidationMessage]!
+}
+
+type ValidationMessage {
+    field: String!
+    message: String!
+}
+
+enum BookmarkableType {
+    EPISODE
+    PODCAST
+}
+
+enum BrandSortType {
+    ALPHABETICAL
+}
+
+enum ChartChangeStatus {
+    DOWN
+    NEW
+    NO_CHANGE
+    UP
+}
+
+enum ChartPlatform {
+    APPLE_PODCASTS
+    SPOTIFY
+}
+
+enum ChartsSortOption {
+    CATEGORY
+    COUNTRY
+    POSITION
+}
+
+enum CreatorIdentifierType {
+    PCID
+}
+
+enum CreatorSortType {
+    ALPHABETICAL
+    APPEARANCE_COUNT
+    FOLLOWER_COUNT
+    RECENT_EPISODE
+    RELEVANCE
+    TRENDING
+}
+
+enum CreditSubmissionOperation {
+    addEpisodeCredits
+    removeCharacterFromEpisodeCredits
+    removeEpisodeCredits
+}
+
+enum CreditSubmissionState {
+    approved
+    committed
+    submitted
+}
+
+enum EpisodeIdentifierType {
+    GUID
+    PODCHASER
+}
+
+enum EpisodeSelectionType {
+    " Select all episodes of a specific podcast "
+    ALL_EPISODES
+    " Select episodes that were released within a date range for a specific podcast "
+    DATE_RANGE
+    " Select episodes by ID or GUID "
+    SPECIFIC_EPISODES
+}
+
+enum EpisodeSortType {
+    AIR_DATE
+    ALPHABETICAL
+    FOLLOWER_COUNT
+    RELEVANCE
+    TRENDING
+}
+
+enum EpisodeType {
+    BONUS
+    FULL
+    TRAILER
+}
+
+enum FollowResultStatus {
+    FOLLOWED
+    FOLLOW_REQUESTED
+    FOLLOW_REQUEST_CANCELLED
+    UNFOLLOWED
+    UNSUBSCRIBED
+}
+
+enum Followable {
+    CREATOR
+    LIST
+    PODCAST
+    USER
+}
+
+enum ListIdentifierType {
+    ENCODED
+    LINK_ONLY
+    PODCHASER
+}
+
+enum ListPrivacy {
+    LINK_ONLY
+    PRIVATE
+    PUBLIC
+}
+
+enum ListSortType {
+    ALPHABETICAL
+    FOLLOWER_COUNT
+    LIKE_COUNT
+    UPDATE_DATE
+}
+
+enum ListType {
+    EPISODE
+    PODCAST
+}
+
+enum ListenSortType {
+    LISTEN_DATE
+}
+
+enum ModerationReason {
+    "Credit Submission"
+    CREDIT_SUBMISSION
+    "New Feed"
+    NEW_FEED
+    "Possible Duplicate"
+    POSSIBLE_DUPLICATE
+    "Possible Duplicate Podcast"
+    POSSIBLE_DUPLICATE_PODCAST
+}
+
+enum OAuthGrantType {
+    AUTHORIZATION_CODE
+    CLIENT_CREDENTIALS
+}
+
+enum PaginationType {
+    CURSOR
+    PAGE
+}
+
+enum PodcastCreditIdentifierType {
+    PODCHASER
+}
+
+enum PodcastIdentifierType {
+    APPLE_PODCASTS
+    PODCHASER
+    RSS
+    SPOTIFY
+}
+
+enum PodcastSortType {
+    ALPHABETICAL
+    " Sort by date of the first episode of the podcast. "
+    DATE_OF_FIRST_EPISODE
+    " Sort by the number of Podchaser followers a podcast has. "
+    FOLLOWER_COUNT
+    " Sort by the podcast's PowerScore. Requires [our plus or pro plans](https://features.podchaser.com/api). "
+    POWER_SCORE
+    RELEVANCE
+    TRENDING
+}
+
+enum Pronoun {
+    HE_HIM
+    SHE_HER
+    THEY_THEM
+    UNSURE
+}
+
+enum RateableType {
+    EPISODE
+    PODCAST
+}
+
+enum RatingSortType {
+    RATED_DATE
+    RATING
+}
+
+enum ReviewSortType {
+    REVIEW_DATE
+}
+
+enum ReviewableType {
+    EPISODE
+    PODCAST
+}
+
+"""
+
+Which direction to sort the list by.
+
+Note: some sort options will only allow a single direction.
+"""
+enum SortDirection {
+    ASCENDING
+    DESCENDING
+}
+
+"The available directions for ordering a list of records."
+enum SortOrder {
+    "Sort records in ascending order."
+    ASC
+    "Sort records in descending order."
+    DESC
+}
+
+" The attribute to sort the list on. "
+enum SortType {
+    DATE
+    RELEVANCE
+}
+
+"Specify if you want to include or exclude trashed results from a query."
+enum Trashed {
+    "Only return trashed results."
+    ONLY
+    "Return both trashed and non-trashed results."
+    WITH
+    "Only return non-trashed results."
+    WITHOUT
+}
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+
+"A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sO`, e.g. `2020-04-20T13:53:12+02:00`."
+scalar DateTimeTz
+
+"A valid URL that can be resolved"
+scalar Url
+
+input AccessTokenRequest {
+    client_id: String!
+    client_secret: String!
+    " Only required when using authorization_token grant type "
+    code: String
+    grant_type: OAuthGrantType!
+    limited_scope: Boolean
+    " Must match the redirect URI set up with Podchaser. Only required when using authorization_token grant type "
+    redirect_uri: String
+}
+
+input BrandSort {
+    direction: SortDirection
+    sortBy: BrandSortType!
+}
+
+input CreateListInput {
+    description: String
+    privacy: ListPrivacy!
+    title: String!
+}
+
+"Filters that can be applied to a creator query."
+input CreatorFilters {
+    " Filter by the number of users following the creator. "
+    followerCount: RangeInput
+    " Filter by the date that any of the data within Podchaser was updated for a creator. "
+    modifiedDate: DateRangeInput
+}
+
+input CreatorIdentifier {
+    id: String!
+    type: CreatorIdentifierType!
+}
+
+input CreatorInput {
+    " A brief biography of the creator "
+    biography: String
+    " The creator's date of birth "
+    birthday: Date
+    " The creator's informal name to be used in casual sentences, usually the first name "
+    informalName: String
+    " The city the creator is from (will be verified using Google Places API "
+    location: String
+    " The creator's full name "
+    name: String
+    " A base64 encoded version of the creator profile image, submitted as a data URL "
+    profileImage: String
+    " The creator's pronouns for use when referring to them in sentences "
+    pronouns: Pronoun
+    " The full URL of the creator's Twitter profile "
+    twitter: Url
+    " The full URL of a Wikipedia article about the creator "
+    wikipedia: Url
+}
+
+input CreatorSort {
+    direction: SortDirection
+    sortBy: CreatorSortType!
+}
+
+"Filters that can be applied to a credits query."
+input CreditFilters {
+    " Filter by the time period that any of the data within Podchaser was added or updated for a credit. "
+    modifiedDate: DateRangeInput
+    " Filter by a creator's role. See Podcast Taxonomy for options "
+    role: [String]
+}
+
+input DateRangeInput {
+    from: DateTime
+    to: DateTime
+}
+
+input EntityToRate {
+    entityId: ID!
+    entityType: RateableType
+}
+
+input EntityToReview {
+    entityId: Int!
+    entityType: ReviewableType
+}
+
+"Filters that can be applied to a episodes query."
+input EpisodeFilters {
+    " Filter by when the episode aired, according to its publisher. "
+    airDate: [DateRangeInput]
+    " Filter by the episodes' type. These can be full, bonus, or trailer episodes. "
+    episodeType: [EpisodeType]
+    " Filter by whether the episode has been marked as explicit by the publisher. "
+    isExplicit: [Boolean]
+    " Filter by how long an episode is, in seconds. "
+    length: [RangeInput]
+    " Filter by the date that any of the data within Podchaser was updated for an episode. "
+    modifiedDate: DateRangeInput
+    " Filter by the podcast's PowerScore. "
+    podcastPowerScore: [RangeInput]
+    " Filter by which brands have sponsored each episode. Use the brand's 'code'. For searching for a brand's code, use the brands query."
+    sponsoredBy: [String]
+}
+
+input EpisodeIdentifier {
+    id: String!
+    podcast: PodcastIdentifier
+    type: EpisodeIdentifierType!
+}
+
+" Defines which episodes a particular credit submissions applies to "
+input EpisodeSelection {
+    dateRange: DateRangeInput
+    episodes: [EpisodeIdentifier!]
+    selectionType: EpisodeSelectionType
+}
+
+input EpisodeSort {
+    direction: SortDirection
+    sortBy: EpisodeSortType!
+}
+
+"Filters that can be applied to a lists query."
+input ListFilters {
+    " Filter by the number of users following the list. "
+    followerCount: RangeInput
+    " Filter by the number of items within a list. "
+    itemCount: RangeInput
+    " Filter by the number of likes the list has received from users. "
+    likeCount: RangeInput
+    " Filter by the type of list. "
+    listType: ListType
+    " Filter by the date the list was last edited. "
+    updatedAt: DateRangeInput
+}
+
+input ListIdentifier {
+    id: ID!
+    type: ListIdentifierType
+}
+
+input ListItemPosition {
+    listItemId: ID!
+    position: Int!
+}
+
+input ListSort {
+    direction: SortDirection
+    sortBy: ListSortType!
+}
+
+input ListenFilters {
+    listenDate: DateRangeInput
+}
+
+input ListenSort {
+    direction: SortDirection
+    sortBy: ListenSortType!
+}
+
+input ModerationTaskFilters {
+    onlyUserSubmitted: Boolean
+    reason: [ModerationReason]
+    resolved: Boolean
+}
+
+"Allows ordering a list of records."
+input OrderByClause {
+    "The column that is used for ordering."
+    column: String!
+    "The direction that is used for ordering."
+    order: SortOrder!
+}
+
+"Order by clause for the `sort` argument on the query `charts`."
+input PodcastChartsSortOrderByClause {
+    "The column that is used for ordering."
+    column: ChartsSortOption!
+    "The direction that is used for ordering."
+    order: SortOrder!
+}
+
+input PodcastCreditIdentifier {
+    id: String!
+    type: PodcastCreditIdentifierType!
+}
+
+"Filters that can be applied to a podcasts query."
+input PodcastFilters {
+    " Filter by the Podchaser categories attached to the podcast. Must search using the 'slug' of the category. "
+    categories: [String]
+    "Filter by the top XX podcasts per country (normally up to 500 per country). Expected in 2-character country code, such as us or ca."
+    country: String
+    " Filter by the date of the latest episode released by this podcast "
+    dateOfLatestEpisode: DateRangeInput
+    " Filter by whether the podcast is likely to have guests. True - has guests, false - unlikely to have guests. "
+    hasGuests: [Boolean]
+    " Filter by specific podcast identifiers. Use Podchaser ID for best performance. "
+    identifiers: [PodcastIdentifier]
+    "Filter by what the podcast's feed states is the language of the podcast. Expected in 2-character language code, such as en or es."
+    language: String
+    " Filter by the date that any of the data within Podchaser was updated for a podcast. "
+    modifiedDate: DateRangeInput
+    " Filter by the podcast's PowerScore. Requires [our plus or pro plans](https://features.podchaser.com/api). "
+    powerScore: [RangeInput]
+    " Filter by the average rating given by Podchaser user's for the podcast. "
+    rating: RatingFilter
+}
+
+input PodcastIdentifier {
+    id: String!
+    type: PodcastIdentifierType!
+}
+
+input PodcastSort {
+    direction: SortDirection
+    sortBy: PodcastSortType!
+}
+
+"Order by clause for the `sort` argument on the query `charts`."
+input QueryChartsSortOrderByClause {
+    "The column that is used for ordering."
+    column: ChartsSortOption!
+    "The direction that is used for ordering."
+    order: SortOrder!
+}
+
+input RangeInput {
+    from: Int
+    to: Int
+}
+
+input RatingFilter {
+    " Min rating must be between 1 and 5 "
+    maxRating: Float
+    " Min rating must be between 1 and 5 "
+    minRating: Float
+}
+
+input RatingFilters {
+    modifiedDate: DateRangeInput
+    ratedDate: DateRangeInput
+    rating: RangeInput
+}
+
+input RatingSort {
+    direction: SortDirection
+    sortBy: RatingSortType!
+}
+
+input ReviewFilters {
+    modifiedDate: DateRangeInput
+    reviewDate: DateRangeInput
+}
+
+input ReviewSort {
+    direction: SortDirection
+    sortBy: ReviewSortType!
+}
+
+" Desired sort for a list "
+input Sort {
+    direction: SortDirection
+    sortBy: SortType!
+}
+
+input UpdateListInput {
+    description: String
+    privacy: ListPrivacy
+    title: String
+}
+
+input UpdateUserInput {
+    bio: String
+    email: String!
+    username: String!
+}

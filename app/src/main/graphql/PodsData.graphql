@@ -1,0 +1,11 @@
+
+query DataQuery($podcastsFilters: PodcastFilters, $podcastsSort: PodcastSort, $podcastsFirst: Int, $podcastsPage: Int, $podcastsPaginationType: PaginationType) {
+    podcasts(filters: $podcastsFilters, sort: $podcastsSort, first: $podcastsFirst, page: $podcastsPage, paginationType: $podcastsPaginationType) {
+        data {
+            id
+            title
+            description
+            imageUrl
+        }
+    }
+}
