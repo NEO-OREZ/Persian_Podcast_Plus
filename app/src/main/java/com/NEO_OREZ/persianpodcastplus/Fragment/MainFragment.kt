@@ -1,5 +1,6 @@
 package com.NEO_OREZ.persianpodcastplus.Fragment
 
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ class MainFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         viewModel = ViewModelProvider(this, factory).get(MainFragViewModel::class.java)
         GlobalScope.launch(Dispatchers.IO) {
             val getToken = CallRequest().apolloToken()
@@ -39,11 +41,21 @@ class MainFragment : Fragment() {
                 viewModel.dataListLive.observe(this@MainFragment, Observer { it->
                     Log.d("logfrag_it",it.toString())
                     bindingMainFrag.rvFragmain.layoutManager = LinearLayoutManager(context)
-                    bindingMainFrag.rvFragmain.adapter = RecyclerAdapter(it)
+                    bindingMainFrag.rvFragmain.adapter = RecyclerAdapter(getData)
+
 
                 })
             }
         }
+    }
+    fun transit(id:String){
+        Log.d("logfragMain_Selectedid",id)
+
+        //val transit = childFragmentManager.beginTransaction()
+       // Log.d("logfragMain_transitTo",transit.toString())
+        //transit.replace(android.R.id.content, EpisodesFragment())
+       // transit.commit()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

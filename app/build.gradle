@@ -63,6 +63,11 @@ dependencies {
     //Gson
     implementation "com.google.code.gson:gson:2.8.9"
 
+    //ViewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    //CircleIndicator
+    implementation 'me.relex:circleindicator:2.1.6'
+
     // ViewModel&LiveData
     def lifecycle_version = "2.5.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"

@@ -36,10 +36,8 @@ class CategoryFragment : Fragment() {
         val factoryCat = CategoryViewModelFactory()
         viewModel = ViewModelProvider(this, factoryCat).get(CategoryViewModel::class.java)
 
-
         GlobalScope.launch(Dispatchers.IO) {
             val selectedCategory = getArguments()?.getString("0")
-
             val getToken = CallRequest().apolloToken()
             val getDataCat = CallRequest().apolloDataCat(getToken, selectedCategory)
             Log.d("logfragfirst_Data", getDataCat.toString())

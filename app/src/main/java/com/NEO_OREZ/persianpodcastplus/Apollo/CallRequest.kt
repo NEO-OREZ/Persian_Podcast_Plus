@@ -1,6 +1,7 @@
 package com.NEO_OREZ.persianpodcastplus.Apollo
 
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
@@ -8,6 +9,7 @@ import com.apollographql.apollo3.cache.normalized.normalizedCache
 import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo3.network.okHttpClient
 import com.NEO_OREZ.persianpodcastplus.*
+import com.NEO_OREZ.persianpodcastplus.Fragment.MainFragment
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapter
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapterCat
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapterEpisode
@@ -68,7 +70,6 @@ class CallRequest {
                 , podcastsFirst = Optional.presentIfNotNull(8)
                 , podcastsPage = Optional.presentIfNotNull(0)
                 , podcastsPaginationType = Optional.presentIfNotNull(PaginationType.PAGE)
-
             )
         ).execute()
 
