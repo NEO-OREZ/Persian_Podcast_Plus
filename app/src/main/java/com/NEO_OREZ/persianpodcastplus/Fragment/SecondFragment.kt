@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.NEO_OREZ.persianpodcastplus.GridModel
 import com.NEO_OREZ.persianpodcastplus.R
@@ -52,24 +53,23 @@ class SecondFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(SecondFragViewModel::class.java)
 
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
 
             withContext(Dispatchers.Main){
                 viewModel.SecondData(ListA as ArrayList<GridModel>)
 
                 viewModel.dataSecLive.observe(viewLifecycleOwner, Observer { it ->
-                    Log.d("logfragsecond_it", it.toString())
+                    Log.d("logFragSec_00it", it.toString())
                     bindingSecFrag.gridViewID.adapter = GridAdapter(it, requireContext())
                     bindingSecFrag.gridViewID.onItemClickListener =
                     AdapterView.OnItemClickListener { _, _, position, _ ->
-                        Toast.makeText(
-                            requireContext(),
+                        Toast.makeText(requireContext(),
                             ListA[position].gridText + " selected", Toast.LENGTH_SHORT).show()
 
                         val txt = ListA[position].gridText
                         val bundle = Bundle()
                         bundle.putString("0", txt)
-                        findNavController().navigate(R.id.action_secondFragment_to_categoryFragment, bundle)
+                       // findNavController().navigate(R.id.action_secondFragment_to_categoryFragment, bundle)
 
                     }
                 })

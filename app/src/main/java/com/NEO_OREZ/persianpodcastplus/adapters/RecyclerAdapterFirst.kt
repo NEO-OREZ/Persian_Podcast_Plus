@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.NEO_OREZ.persianpodcastplus.DataQueryHOTQuery
+import com.NEO_OREZ.persianpodcastplus.Fragment.FirsFragment
+import com.NEO_OREZ.persianpodcastplus.Fragment.MainFragment
 import com.NEO_OREZ.persianpodcastplus.R
 import com.NEO_OREZ.persianpodcastplus.databinding.ItemLayoutBinding
 
 
-class RecyclerAdapterHot (private val homeFeed : ArrayList<DataQueryHOTQuery.Data1>) : RecyclerView.Adapter<MyViewHolderCat>() {
+class RecyclerAdapterFirst (private val homeFeed : ArrayList<DataQueryHOTQuery.Data1>) : RecyclerView.Adapter<MyViewHolderCat>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderCat {
         val bindingH = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolderCat(bindingH)
@@ -34,8 +38,7 @@ class RecyclerAdapterHot (private val homeFeed : ArrayList<DataQueryHOTQuery.Dat
             Log.d("TTT", selectedID)
             val bundle = Bundle()
             bundle.putString("1",selectedID)
-            Navigation.findNavController(holderHot.itemView)
-                .navigate(R.id.action_firsFragment_to_episodesFragment, bundle)
+//            Navigation.findNavController(holderHot.itemView).navigate(R.id.action_firsFragment_to_secondFragment, bundle)
         }
     }
 }

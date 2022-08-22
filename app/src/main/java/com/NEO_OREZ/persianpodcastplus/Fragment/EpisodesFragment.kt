@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.NEO_OREZ.persianpodcastplus.Apollo.CallRequest
 import com.NEO_OREZ.persianpodcastplus.EpisodesViewModel
 import com.NEO_OREZ.persianpodcastplus.EpisodesViewModelFactory
+import com.NEO_OREZ.persianpodcastplus.MainActivity
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapterEpisode
 import com.NEO_OREZ.persianpodcastplus.databinding.EpisodesFragmentBinding
 import kotlinx.coroutines.Dispatchers
@@ -38,12 +40,11 @@ class EpisodesFragment : Fragment() {
         viewModel = ViewModelProvider(this, factoryEpi).get(EpisodesViewModel::class.java)
         ActionBar.DISPLAY_HOME_AS_UP
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
 
-          val selectedID  =  getArguments()?.getString("1") as String
-
-            val getToken = CallRequest().apolloToken()
-            val getDataCat =CallRequest().apolloDataEpisode(getToken, selectedID)
+//          val selectedID  =  getArguments()?.getString("1") as String
+            val getToken = MainFragment().loadData()
+            val getDataCat =CallRequest().apolloDataEpisode(getToken, "687224")
             Log.d("logfragfirst_Data", getDataCat.toString())
 
             withContext(Dispatchers.Main){
