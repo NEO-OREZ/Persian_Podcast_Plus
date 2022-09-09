@@ -1,6 +1,6 @@
 package com.NEO_OREZ.persianpodcastplus.Fragment
 
-import android.content.Context
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,7 +19,6 @@ import com.NEO_OREZ.persianpodcastplus.R
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapterFirst
 import com.NEO_OREZ.persianpodcastplus.databinding.FragmentFirsBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -53,7 +52,7 @@ class FirsFragment : Fragment() {
         }
     }
     fun transit(id:String) {
-        findNavController().navigate(R.id.action_mainFragment_to_episodesFragment)
+        findNavController().navigate(R.id.episodesFragment)
     }
 
 

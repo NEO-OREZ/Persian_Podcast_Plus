@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.NEO_OREZ.persianpodcastplus.GridModel
+import com.NEO_OREZ.persianpodcastplus.ViewModel.GridModel
 import com.NEO_OREZ.persianpodcastplus.R
 
 class GridAdapter (val grid_List: List<GridModel>, private val context: Context) : BaseAdapter() {

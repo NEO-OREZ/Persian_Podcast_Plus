@@ -13,7 +13,7 @@
         android:theme="@style/Theme.PersianPodcastPlus">
 
         <activity
-            android:name=".SplashScreen"
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

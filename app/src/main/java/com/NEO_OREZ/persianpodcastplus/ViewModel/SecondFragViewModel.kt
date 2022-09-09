@@ -2,7 +2,7 @@ package com.NEO_OREZ.persianpodcastplus
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.NEO_OREZ.persianpodcastplus.GridModel
+import com.NEO_OREZ.persianpodcastplus.ViewModel.GridModel
 
 class SecondFragViewModel : ViewModel() {
 

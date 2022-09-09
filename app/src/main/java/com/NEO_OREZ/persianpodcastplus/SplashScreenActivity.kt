@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.NEO_OREZ.persianpodcastplus.databinding.ActivitySplashScreenBinding
 
-class SplashScreen : AppCompatActivity() {
+class SplashScreenActivity : AppCompatActivity() {
 
     private lateinit var bindingSplash: ActivitySplashScreenBinding
 

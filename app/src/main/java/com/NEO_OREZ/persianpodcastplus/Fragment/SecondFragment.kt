@@ -11,15 +11,13 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.NEO_OREZ.persianpodcastplus.GridModel
+import com.NEO_OREZ.persianpodcastplus.ViewModel.GridModel
 import com.NEO_OREZ.persianpodcastplus.R
 import com.NEO_OREZ.persianpodcastplus.SecondFragViewModel
 import com.NEO_OREZ.persianpodcastplus.SecondFragViewModelFactory
 import com.NEO_OREZ.persianpodcastplus.adapters.GridAdapter
 import com.NEO_OREZ.persianpodcastplus.databinding.FragmentSecondBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList

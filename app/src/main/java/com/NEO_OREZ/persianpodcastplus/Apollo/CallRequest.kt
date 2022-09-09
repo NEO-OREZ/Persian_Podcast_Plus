@@ -71,7 +71,7 @@ class CallRequest {
         ).execute()
 
         val  dataPods  = responseData.data!!.podcasts!!.data as ArrayList
-         Log.d("apollo3", dataPods.toString())
+         //Log.d("apollo3", dataPods.toString())
         launch.addAll(dataPods)
         RecyclerAdapter(launch).notifyDataSetChanged()
         return dataPods
@@ -105,7 +105,7 @@ class CallRequest {
         ).execute()
 
         val  dataPods  = responseDataHot.data?.podcasts?.data as ArrayList
-         Log.d("logapollohot", dataPods.toString())
+        // Log.d("logapollohot", dataPods.toString())
         launchHot.addAll(dataPods)
         RecyclerAdapterFirst(launchHot).notifyDataSetChanged()
         return dataPods
@@ -138,7 +138,7 @@ class CallRequest {
         ).execute()
 
         val  dataPods  = responseDataCat.data?.podcasts?.data as ArrayList
-        Log.d("logapolloCat",dataPods.toString())
+        //Log.d("logapolloCat",dataPods.toString())
         launchCat.addAll(dataPods)
         RecyclerAdapterCat(launchCat).notifyDataSetChanged()
         return dataPods
@@ -168,7 +168,7 @@ class CallRequest {
         )).execute()
 
         val  dataPods  = responseDataEpisode.data?.podcast?.episodes?.data as ArrayList
-        Log.d("logapolloCat",dataPods.toString())
+        //Log.d("logapolloCat",dataPods.toString())
         launchEpisode.addAll(dataPods)
         RecyclerAdapterEpisode(launchEpisode).notifyDataSetChanged()
         return dataPods

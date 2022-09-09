@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.NEO_OREZ.persianpodcastplus.Apollo.CallRequest
@@ -60,17 +62,15 @@ class MainFragment : Fragment() {
         return key.toString()
     }
 
-    suspend fun transit(id:String) {
+     fun transit(id:String) {
         Log.d("logMainFrag_03transit", id)
         //val bundle = Bundle()
         //bundle.putString("2", id)
         //val navHostFragment = Navigation.findNavController(requireActivity(),R.id.fragmentContainerViewMfragID)
-
-        Log.d("logMainFrag_04cycle", id)
-        findNavControllerSafely().navigate(R.id.episodesFragment)
+        //Log.d("logMainFrag_04cycle", navController.toString())
+       // findNavControllerSafely().navigate(R.id.episodesFragment)
+        findNavController().navigate(R.id.episodesFragment)
        // Navigation.findNavController(requireView()).navigate(R.id.episodesFragment)
-
-
     }
 
     fun Fragment.findNavControllerSafely(): NavController {
@@ -86,5 +86,4 @@ class MainFragment : Fragment() {
 //        transit.setReorderingAllowed(true)
 //        transit.addToBackStack(null)
 //        transit.commit()
-
 }
