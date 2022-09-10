@@ -3,14 +3,13 @@ package com.NEO_OREZ.persianpodcastplus
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.NEO_OREZ.persianpodcastplus.DataEpisodesQuery
 
 class EpisodesViewModel : ViewModel() {
 
-    var dataEpisodeLive = MutableLiveData<ArrayList<DataEpisodesQuery.Data1>>()
-    val dataEpisode = ArrayList<DataEpisodesQuery.Data1> ()
+    var dataEpisodeLive = MutableLiveData<ArrayList<DataQEpisodeQuery.Data1>>()
+    val dataEpisode = ArrayList<DataQEpisodeQuery.Data1> ()
 
-    fun EpisodeData(daTa:ArrayList<DataEpisodesQuery.Data1>) {
+    fun EpisodeData(daTa:ArrayList<DataQEpisodeQuery.Data1>) {
         dataEpisode.addAll(daTa)
         dataEpisodeLive.value = dataEpisode
 

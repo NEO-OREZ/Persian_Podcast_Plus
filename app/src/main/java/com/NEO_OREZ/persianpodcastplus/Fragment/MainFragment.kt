@@ -35,7 +35,7 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory).get(MainFragViewModel::class.java)
 
         lifecycleScope.launch(Dispatchers.IO) {
-
+            delay(500)
             val getToken = loadData()
             val getData = CallRequest().apolloDataMain(getToken)
             Log.d("logMainFrag_00Data",getData.toString())
@@ -46,7 +46,6 @@ class MainFragment : Fragment() {
                     Log.d("logMainFrag_01it",it.toString())
                     bindingMainFrag.rvFragmain.layoutManager = LinearLayoutManager(context)
                     bindingMainFrag.rvFragmain.adapter = RecyclerAdapter(getData)
-
                 })
             }
         }
@@ -56,34 +55,11 @@ class MainFragment : Fragment() {
         return  bindingMainFrag.root
     }
 
-    fun loadData() : String{
+    private fun loadData() : String {
         val sharedPreferences = activity?.getSharedPreferences("KeySave", Context.MODE_PRIVATE)
-        val key = sharedPreferences?.getString("key0", "default text if null")
+        val key = sharedPreferences?.getString("key01","Key is null")
+        Log.d("logMainFrag_03Key",key.toString())
         return key.toString()
     }
 
-     fun transit(id:String) {
-        Log.d("logMainFrag_03transit", id)
-        //val bundle = Bundle()
-        //bundle.putString("2", id)
-        //val navHostFragment = Navigation.findNavController(requireActivity(),R.id.fragmentContainerViewMfragID)
-        //Log.d("logMainFrag_04cycle", navController.toString())
-       // findNavControllerSafely().navigate(R.id.episodesFragment)
-        findNavController().navigate(R.id.episodesFragment)
-       // Navigation.findNavController(requireView()).navigate(R.id.episodesFragment)
-    }
-
-    fun Fragment.findNavControllerSafely(): NavController {
-        return if (isAdded) {
-            findNavController()
-        } else {  Log.d("logMainFrag_04cycle", "dfghhjcb")  as NavController}
-    }
-
-
-//        val transit = childFragmentManager.beginTransaction()
-//        Log.d("logfragMain_transitTo",transit.toString())
-//        transit.replace(R.id.episodesFragment, EpisodesFragment())
-//        transit.setReorderingAllowed(true)
-//        transit.addToBackStack(null)
-//        transit.commit()
 }

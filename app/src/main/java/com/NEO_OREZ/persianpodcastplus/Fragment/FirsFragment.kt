@@ -1,6 +1,7 @@
 package com.NEO_OREZ.persianpodcastplus.Fragment
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -30,29 +31,31 @@ class FirsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("logFragFirst_00", "First Frag Started")
+        Log.d("logFirstFrag_00", "First Frag Started")
 
         viewModelHot = ViewModelProvider(this, factoryHot).get(FirstFragViewModel::class.java)
 
-        val getToken = MainFragment().loadData()
-        Log.d("logFragFirst_01Token", getToken)
+        val getToken = loadData()
+        Log.d("logFirstFrag_01Token", getToken)
         lifecycleScope.launch(Dispatchers.IO) {
             val getDataHot = CallRequest().apolloDataHot(getToken)
-            Log.d("logFragFirst_02Data", getDataHot.toString())
+            Log.d("logFirstFrag_02Data", getDataHot.toString())
 
             withContext(Dispatchers.Main){
                 viewModelHot.HotData(getDataHot)
-
                 viewModelHot.dataHotLive.observe(this@FirsFragment, Observer { it->
-                   // Log.d("logFirstFrag_03it",it.toString())
                     bindingFirstFrag.rvFragfirst.layoutManager = LinearLayoutManager(context)
                     bindingFirstFrag.rvFragfirst.adapter = RecyclerAdapterFirst(it)
                 })
             }
         }
     }
-    fun transit(id:String) {
-        findNavController().navigate(R.id.episodesFragment)
+
+    private fun loadData() : String {
+        val sharedPreferences = activity?.getSharedPreferences("KeySave", Context.MODE_PRIVATE)
+        val key = sharedPreferences?.getString("key01","Key is null")
+        Log.d("logFirstFrag_03Key",key.toString())
+        return key.toString()
     }
 
 

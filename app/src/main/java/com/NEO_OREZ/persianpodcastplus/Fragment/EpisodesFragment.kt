@@ -1,6 +1,7 @@
 package com.NEO_OREZ.persianpodcastplus.Fragment
 
 import android.app.ActionBar
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -42,19 +43,28 @@ class EpisodesFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
 
-//          val selectedID  =  getArguments()?.getString("1") as String
-            val getToken = MainFragment().loadData()
-            val getDataCat =CallRequest().apolloDataEpisode(getToken, "687224")
-            Log.d("logfragfirst_Data", getDataCat.toString())
+            val selectedID  =  getArguments()?.getString("1") as String
+            Log.d("logEpiFrag_01selectedID", selectedID)
+            val getToken = loadData()
+            val getDataCat =CallRequest().apolloDataEpisode(getToken, selectedID)
+            Log.d("logEpiFrag_02Data", getDataCat.toString())
+
 
             withContext(Dispatchers.Main){
                 viewModel.EpisodeData(getDataCat)
                 viewModel.dataEpisodeLive.observe(viewLifecycleOwner, Observer { it->
-                    Log.d("logfragfirst_it",it.toString())
+                    Log.d("logEpiFrag_03it",it.toString())
                     bindingEpisode.rvEpisodeFrag.layoutManager = LinearLayoutManager(context)
                     bindingEpisode.rvEpisodeFrag.adapter = RecyclerAdapterEpisode(it)
                 })
             }
         }
+    }
+
+    private fun loadData() : String {
+        val sharedPreferences = activity?.getSharedPreferences("KeySave", Context.MODE_PRIVATE)
+        val key = sharedPreferences?.getString("key01","Key is null")
+        Log.d("logEpiFrag_04Key",key.toString())
+        return key.toString()
     }
 }

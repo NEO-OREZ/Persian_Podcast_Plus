@@ -14,6 +14,9 @@ import com.NEO_OREZ.persianpodcastplus.Fragment.FirsFragment
 import com.NEO_OREZ.persianpodcastplus.Fragment.MainFragment
 import com.NEO_OREZ.persianpodcastplus.R
 import com.NEO_OREZ.persianpodcastplus.databinding.ItemLayoutBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class RecyclerAdapterFirst (private val homeFeed : ArrayList<DataQueryHOTQuery.Data1>) : RecyclerView.Adapter<MyViewHolderCat>() {
@@ -38,7 +41,7 @@ class RecyclerAdapterFirst (private val homeFeed : ArrayList<DataQueryHOTQuery.D
             Log.d("TTT", selectedID)
             val bundle = Bundle()
             bundle.putString("1",selectedID)
-//            Navigation.findNavController(holderHot.itemView).navigate(R.id.action_firsFragment_to_secondFragment, bundle)
+            Navigation.findNavController(holderHot.itemView).navigate(R.id.action_hostFragment_to_episodesFragment, bundle)
         }
     }
 }

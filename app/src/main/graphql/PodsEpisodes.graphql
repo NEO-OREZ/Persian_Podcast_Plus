@@ -1,12 +1,12 @@
-query DataEpisodes($identifier: PodcastIdentifier!, $first: Int, $sort: EpisodeSort, $paginationType: PaginationType) {
+
+query DataQEpisode($identifier: PodcastIdentifier!, $sort: EpisodeSort) {
     podcast(identifier: $identifier) {
-        episodes(first: $first, sort: $sort, paginationType: $paginationType) {
+        episodes(sort: $sort) {
             data {
                 id
                 title
                 description
                 imageUrl
-                audioUrl
             }
         }
     }

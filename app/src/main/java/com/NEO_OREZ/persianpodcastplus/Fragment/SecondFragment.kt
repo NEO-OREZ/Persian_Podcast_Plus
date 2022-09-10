@@ -68,7 +68,6 @@ class SecondFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putString("0", txt)
                        // findNavController().navigate(R.id.action_secondFragment_to_categoryFragment, bundle)
-
                     }
                 })
             }

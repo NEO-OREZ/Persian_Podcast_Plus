@@ -23,7 +23,7 @@ class CallRequest {
     private val launch = ArrayList<DataQuery.Data1>()
     private val launchHot = ArrayList<DataQueryHOTQuery.Data1>()
     private val launchCat = ArrayList<DataCategoriesQuery.Data1>()
-    private val launchEpisode = ArrayList<DataEpisodesQuery.Data1>()
+    private val launchEpisode = ArrayList<DataQEpisodeQuery.Data1>()
 
 
 
@@ -52,14 +52,14 @@ class CallRequest {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor(token0))
             .build()
-        val apolloClient1 = ApolloClient.Builder()
+        val apolloClient = ApolloClient.Builder()
             .serverUrl(baseURL)
             .okHttpClient(okHttpClient)
             .normalizedCache(cacheFactory)
             .normalizedCache(sqlCacheFactory)
             .build()
 
-        val responseData = apolloClient1.query(
+        val responseData = apolloClient.query(
             DataQuery(
                 podcastsFilters = Optional.presentIfNotNull(PodcastFilters(language = Optional.presentIfNotNull("FA")))
                 , podcastsSort = Optional.presentIfNotNull(PodcastSort(Optional.presentIfNotNull(SortDirection.DESCENDING)
@@ -86,14 +86,14 @@ class CallRequest {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor(token0))
             .build()
-        val apolloClient1 = ApolloClient.Builder()
+        val apolloClient = ApolloClient.Builder()
             .serverUrl(baseURL)
             .okHttpClient(okHttpClient)
             .normalizedCache(cacheFactory)
             .normalizedCache(sqlCacheFactory)
             .build()
 
-        val responseDataHot = apolloClient1.query(
+        val responseDataHot = apolloClient.query(
             DataQueryHOTQuery(
                 filters = Optional.presentIfNotNull(PodcastFilters(language = Optional.presentIfNotNull("FA")))
                 , podcastsFirst2 = Optional.presentIfNotNull(8)
@@ -105,7 +105,6 @@ class CallRequest {
         ).execute()
 
         val  dataPods  = responseDataHot.data?.podcasts?.data as ArrayList
-        // Log.d("logapollohot", dataPods.toString())
         launchHot.addAll(dataPods)
         RecyclerAdapterFirst(launchHot).notifyDataSetChanged()
         return dataPods
@@ -120,13 +119,13 @@ class CallRequest {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor(token0))
             .build()
-        val apolloClient2 = ApolloClient.Builder()
+        val apolloClient = ApolloClient.Builder()
             .serverUrl(baseURL)
             .okHttpClient(okHttpClient)
             .normalizedCache(cacheFactory)
             .normalizedCache(sqlCacheFactory)
             .build()
-        val responseDataCat = apolloClient2.query(
+        val responseDataCat = apolloClient.query(
             DataCategoriesQuery(
                 filters = Optional.presentIfNotNull(PodcastFilters(categories = Optional.presentIfNotNull(categoryList)))
                 , page = Optional.presentIfNotNull(1)
@@ -145,30 +144,31 @@ class CallRequest {
     }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////
-    suspend fun apolloDataEpisode(token0:String, ID:String): ArrayList<DataEpisodesQuery.Data1>{
+    suspend fun apolloDataEpisode(token0:String, ID:String): ArrayList<DataQEpisodeQuery.Data1>{
         val cacheFactory = MemoryCacheFactory(maxSizeBytes = 20 * 1024 * 1024)
         val sqlCacheFactory = SqlNormalizedCacheFactory("apollo_episode.db")
 
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor(token0))
             .build()
-        val apolloClient2 = ApolloClient.Builder()
+        val apolloClient = ApolloClient.Builder()
             .serverUrl(baseURL)
             .okHttpClient(okHttpClient)
             .normalizedCache(cacheFactory)
             .normalizedCache(sqlCacheFactory)
             .build()
-        val responseDataEpisode = apolloClient2.query(DataEpisodesQuery(
-            identifier = PodcastIdentifier(ID, PodcastIdentifierType.PODCHASER)
-            , first = Optional.presentIfNotNull(5)
-            , sort = Optional.presentIfNotNull(EpisodeSort(
-                Optional.presentIfNotNull(SortDirection.DESCENDING)
-                ,EpisodeSortType.AIR_DATE))
-            , paginationType = Optional.presentIfNotNull(PaginationType.PAGE)
-        )).execute()
+        val responseDataEpisode = apolloClient.query(
+            DataQEpisodeQuery(
+                identifier = PodcastIdentifier(ID ,PodcastIdentifierType.PODCHASER),
+                sort = Optional.presentIfNotNull(EpisodeSort(
+                    Optional.presentIfNotNull(
+                        SortDirection.DESCENDING),EpisodeSortType.AIR_DATE)))
+        ).execute()
+
+        Log.d("logapolloCat",responseDataEpisode.data.toString())
 
         val  dataPods  = responseDataEpisode.data?.podcast?.episodes?.data as ArrayList
-        //Log.d("logapolloCat",dataPods.toString())
+        Log.d("logapolloCat",dataPods.toString())
         launchEpisode.addAll(dataPods)
         RecyclerAdapterEpisode(launchEpisode).notifyDataSetChanged()
         return dataPods

@@ -1,6 +1,7 @@
 package com.NEO_OREZ.persianpodcastplus.Fragment
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -14,11 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.NEO_OREZ.persianpodcastplus.Apollo.CallRequest
 import com.NEO_OREZ.persianpodcastplus.CategoryViewModel
 import com.NEO_OREZ.persianpodcastplus.CategoryViewModelFactory
-import com.NEO_OREZ.persianpodcastplus.MainActivity
 import com.NEO_OREZ.persianpodcastplus.adapters.RecyclerAdapterCat
 import com.NEO_OREZ.persianpodcastplus.databinding.CategoryFragmentBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -40,20 +39,27 @@ class CategoryFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val selectedCategory = getArguments()?.getString("2")
-            Log.d("logfragcat_string",selectedCategory.toString())
-            val getToken = MainFragment().loadData()
+            Log.d("logCatFrag_0selectedCat",selectedCategory.toString())
+            val getToken = loadData()
             val getDataCat = CallRequest().apolloDataCat(getToken,selectedCategory)
-            Log.d("logfragfirst_Data", getDataCat.toString())
+            Log.d("logCatFrag_01Data", getDataCat.toString())
 
             withContext(Dispatchers.Main){
                 viewModel.CatData(getDataCat)
 
                 viewModel.dataCatLive.observe(viewLifecycleOwner, Observer { it->
-                    Log.d("logfragcat_it",it.toString())
+                    Log.d("logCatFrag_02it",it.toString())
                     bindingCatFrag.rvCatfrag.layoutManager = LinearLayoutManager(context)
                     bindingCatFrag.rvCatfrag.adapter = RecyclerAdapterCat(it)
                 })
             }
         }
+    }
+
+    private fun loadData() : String {
+        val sharedPreferences = activity?.getSharedPreferences("KeySave", Context.MODE_PRIVATE)
+        val key = sharedPreferences?.getString("key01","Key is null")
+        Log.d("logCatFrag_03Key",key.toString())
+        return key.toString()
     }
 }

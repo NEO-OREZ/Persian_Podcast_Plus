@@ -3,12 +3,12 @@ package com.NEO_OREZ.persianpodcastplus.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.NEO_OREZ.persianpodcastplus.DataQEpisodeQuery
 import com.bumptech.glide.Glide
-import com.NEO_OREZ.persianpodcastplus.DataEpisodesQuery
 import com.NEO_OREZ.persianpodcastplus.databinding.ItemLayoutBinding
 
 
-class RecyclerAdapterEpisode (private val homeFeed : ArrayList<DataEpisodesQuery.Data1>)
+class RecyclerAdapterEpisode (private val homeFeed : ArrayList<DataQEpisodeQuery.Data1>)
     : RecyclerView.Adapter<MyViewHolderEpisode>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolderEpisode {
         val binding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
